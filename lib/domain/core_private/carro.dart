@@ -11,7 +11,6 @@ class Carro {
   void carroContemPlaca(DtoCarro dtoCarro) {
     if (dtoCarro.placa.isEmpty && dtoCarro.placa != null)
       throw Exception('Forneça uma placa');
-    
   }
 
   void carroPlacaUnica(int qtdPlaca) {

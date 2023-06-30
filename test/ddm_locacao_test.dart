@@ -10,7 +10,7 @@ void main() {
   late DtoCliente dtoCliente;
   late DDMLocacao locacao;
 
-   test('Carro locado', () {
+  test('Carro locado', () {
     dtoCarro = DtoCarro(nome: 'Onix', placa: 'BBZ1457');
     dtoCliente = DtoCliente(nome: 'João', cnh: '49798881670');
     dtoLocacao = DtoLocacao(
@@ -22,7 +22,7 @@ void main() {
     String mensagem = locacao.salvarLocao();
     expect(mensagem, 'carro locado');
   });
-  
+
   test('Já existe locação para o carro e o cliente', () {
     dtoCarro = DtoCarro(nome: 'Supra', placa: 'JAP8631');
     dtoCliente = DtoCliente(nome: 'Gabriel', cnh: '63651821741');
@@ -58,5 +58,4 @@ void main() {
     locacao = DDMLocacao(dtoLocacao: dtoLocacao);
     expect(() => locacao.salvarLocao(), throwsException);
   });
-
 }

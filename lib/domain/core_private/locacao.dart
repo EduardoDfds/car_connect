@@ -3,8 +3,6 @@ import 'package:car_connect/domain/core_private/cliente.dart';
 import 'package:car_connect/domain/dto/dto_locacao.dart';
 import 'package:car_connect/domain/porta/secundaria/i_dao_locacao.dart';
 
-import '../porta/primaria/i_entrada_locacao.dart';
-
 class Locacao {
   dynamic id;
   late Carro carro;
