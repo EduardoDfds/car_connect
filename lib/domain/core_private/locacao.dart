@@ -1,7 +1,10 @@
 import 'package:car_connect/domain/core_private/carro.dart';
 import 'package:car_connect/domain/core_private/cliente.dart';
 import 'package:car_connect/domain/dto/dto_locacao.dart';
+import 'package:car_connect/domain/dto/dto_resultado_locacao.dart';
 import 'package:car_connect/domain/porta/secundaria/i_dao_locacao.dart';
+import 'package:car_connect/domain/porta/secundaria/i_enviar_mensagem_locacao.dart';
+import 'package:car_connect/infra/enviar_mensagem_locacao.dart';
 
 class Locacao {
   dynamic id;
@@ -35,11 +38,14 @@ class Locacao {
     }
   }
 
-  String realizarLocacao(
-      DtoLocacao dadosLocacao, IDAOLocacao dao, List<DtoLocacao> dtoLocacao) {
+  String realizarLocacao(DtoLocacao dadosLocacao, IDAOLocacao dao,
+      List<DtoLocacao> dtoLocacao, IEnviarMensagemLocacao enviarMensagem) {
     verificaSeClienteTemLocacao(dadosLocacao, dtoLocacao);
     verificaSeEstaLocado(dadosLocacao, dtoLocacao);
-    var mensagem = dao.salvarReserva(dadosLocacao);
+    dao.salvarReserva(dadosLocacao);
+    var mensagem = enviarMensagem
+        .enviarMensagem(DtoResultadoLocacao(dtoLocacao: dadosLocacao));
+
     return mensagem;
   }
 }

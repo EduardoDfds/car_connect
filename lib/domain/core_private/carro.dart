@@ -19,7 +19,7 @@ class Carro {
 
   String salvarcarro(DtoCarro dtoCarro, IDAOCarro dao) {
     carroContemPlaca(dtoCarro);
-    var mensagem = dao.salvarCarro(dtoCarro);
-    return mensagem;
+    dao.salvarCarro(dtoCarro);
+    return 'mensagem';
   }
 }

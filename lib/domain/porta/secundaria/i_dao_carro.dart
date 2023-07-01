@@ -1,3 +1,5 @@
+import 'package:car_connect/domain/dto/dto_carro.dart';
+
 abstract class IDAOCarro {
-  String salvarCarro(DtoCarro);
+  Future<bool> salvarCarro(DtoCarro dtoCarro);
 }
