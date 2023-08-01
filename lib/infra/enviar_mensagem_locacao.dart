@@ -1,6 +1,5 @@
+import 'package:car_connect/domain/dto/dto_resultado_locacao.dart';
 import 'package:car_connect/domain/porta/secundaria/i_enviar_mensagem_locacao.dart';
-
-import '../domain/dto/dto_resultado_locacao.dart';
 
 class EnviarMensagemLocacao implements IEnviarMensagemLocacao {
   @override

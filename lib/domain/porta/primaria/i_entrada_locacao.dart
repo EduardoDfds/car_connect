@@ -4,5 +4,5 @@ abstract class IEntradalocacao {
   String getPlaca();
   DateTime getDataInicio();
   DateTime getDataFim();
-  List<DtoLocacao> buscarLocacoes();
+  Future<List<DtoLocacao>> buscarLocacoes();
 }

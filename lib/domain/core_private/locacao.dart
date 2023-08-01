@@ -1,10 +1,9 @@
 import 'package:car_connect/domain/core_private/carro.dart';
 import 'package:car_connect/domain/core_private/cliente.dart';
 import 'package:car_connect/domain/dto/dto_locacao.dart';
-import 'package:car_connect/domain/dto/dto_resultado_locacao.dart';
 import 'package:car_connect/domain/porta/secundaria/i_dao_locacao.dart';
-import 'package:car_connect/domain/porta/secundaria/i_enviar_mensagem_locacao.dart';
-import 'package:car_connect/infra/enviar_mensagem_locacao.dart';
+
+import '../porta/secundaria/i_enviar_mensagem_locacao.dart';
 
 class Locacao {
   dynamic id;
@@ -19,33 +18,47 @@ class Locacao {
       required this.dataFim,
       required this.dataInicio});
 
-  void verificaSeEstaLocado(
-      DtoLocacao dadosLocacao, List<DtoLocacao> dtoLocacao) {
-    for (var locado in dtoLocacao) {
-      if (dadosLocacao.dadosCarro.placa == locado.dadosCarro.placa &&
+  Future<bool> verificaSeEstaLocado(
+      DtoLocacao dadosLocacao, Future<List<DtoLocacao>> dtoLocacao) async {
+    var locacoes = await dtoLocacao;
+    for (var locado in locacoes) {
+      if (dadosLocacao.dadosCarro.id == locado.dadosCarro.id &&
           dadosLocacao.dataInicio == locado.dataInicio &&
-          dadosLocacao.dataFim == locado.dataFim)
-        throw Exception('Carro locado para o periodo');
+          dadosLocacao.dataFim == locado.dataFim) return false;
     }
+
+    return true;
   }
 
-  void verificaSeClienteTemLocacao(
-      DtoLocacao dadosLocacao, List<DtoLocacao> dtoLocacao) {
-    for (var locacao in dtoLocacao) {
-      if (locacao.dadosCliente.cnh == dadosLocacao.dadosCliente.cnh &&
-          locacao.dataFim == dadosLocacao.dataFim)
-        throw Exception('Cliente possui locacão em aberta');
+  Future<bool> verificaSeClienteTemLocacao(
+      DtoLocacao dadosLocacao, Future<List<DtoLocacao>> dtoLocacao) async {
+    var locacoes = await dtoLocacao;
+    for (var locacao in locacoes) {
+      if (locacao.dadosCliente.id == dadosLocacao.dadosCliente.id &&
+          locacao.dataFim == dadosLocacao.dataFim) return false;
     }
+
+    return true;
   }
 
-  String realizarLocacao(DtoLocacao dadosLocacao, IDAOLocacao dao,
-      List<DtoLocacao> dtoLocacao, IEnviarMensagemLocacao enviarMensagem) {
-    verificaSeClienteTemLocacao(dadosLocacao, dtoLocacao);
-    verificaSeEstaLocado(dadosLocacao, dtoLocacao);
-    dao.salvarReserva(dadosLocacao);
-    var mensagem = enviarMensagem
-        .enviarMensagem(DtoResultadoLocacao(dtoLocacao: dadosLocacao));
+  verificaDataLocacao(DtoLocacao locao) {
+    if (locao.dataFim.isBefore(dataInicio)) return false;
+    if (locao.dataInicio.isBefore(DateTime.now())) return false;
 
-    return mensagem;
+    return true;
+  }
+
+  Future<bool> realizarLocacao(
+      DtoLocacao dadosLocacao,
+      IDAOLocacao dao,
+      Future<List<DtoLocacao>> dtoLocacao,
+      IEnviarMensagemLocacao iEnviarMensagemLocacao) async {
+    var cliente = await verificaSeClienteTemLocacao(dadosLocacao, dtoLocacao);
+    var carroL = await verificaSeEstaLocado(dadosLocacao, dtoLocacao);
+    var data = verificaDataLocacao(dadosLocacao);
+    if (carroL = true && cliente == true && data == true) {
+      return dao.salvarReserva(dadosLocacao);
+    }
+    return false;
   }
 }

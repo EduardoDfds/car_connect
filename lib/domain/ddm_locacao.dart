@@ -1,17 +1,12 @@
-import 'dart:ffi';
-
 import 'package:car_connect/domain/core_private/carro.dart';
 import 'package:car_connect/domain/core_private/cliente.dart';
 import 'package:car_connect/domain/core_private/locacao.dart';
 import 'package:car_connect/domain/dto/dto_locacao.dart';
-import 'package:car_connect/domain/dto/dto_resultado_locacao.dart';
 import 'package:car_connect/domain/porta/primaria/i_entrada_locacao.dart';
 import 'package:car_connect/domain/porta/secundaria/i_dao_locacao.dart';
 import 'package:car_connect/domain/porta/secundaria/i_enviar_mensagem_locacao.dart';
-import 'package:car_connect/infra/dao_locacao.dart';
+import 'package:car_connect/infra/dao_locacao_sqflite.dart';
 import 'package:car_connect/infra/enviar_mensagem_locacao.dart';
-
-import '../infra/banco_fake.dart';
 
 class DDMLocacao implements IEntradalocacao {
   late DtoLocacao dtoLocacao;
@@ -31,8 +26,8 @@ class DDMLocacao implements IEntradalocacao {
                 cnh: dtoLocacao.dadosCliente.cnh));
 
   @override
-  List<DtoLocacao> buscarLocacoes() {
-    return BancoFake().buscaLocao();
+  Future<List<DtoLocacao>> buscarLocacoes() {
+    return dao.listarLocacoes();
   }
 
   @override
@@ -53,10 +48,8 @@ class DDMLocacao implements IEntradalocacao {
     throw UnimplementedError();
   }
 
-  String salvarLocao() {
-    locacao.realizarLocacao(
+  Future<bool> salvarLocao() async {
+    return locacao.realizarLocacao(
         dtoLocacao, dao, buscarLocacoes(), enviarMensagemLocacao);
-    return enviarMensagemLocacao
-        .enviarMensagem(DtoResultadoLocacao(dtoLocacao: dtoLocacao));
   }
 }

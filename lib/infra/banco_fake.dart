@@ -36,4 +36,27 @@ class BancoFake {
 
     return dadosfake;
   }
+
+  List<DtoCarro> buscarCarros() {
+    DtoCarro golf = DtoCarro(nome: 'Golf', placa: 'JJT7489');
+    golf.id = 1;
+    DtoCarro jetta = DtoCarro(nome: 'Jetta', placa: 'APN1234');
+    jetta.id = 2;
+
+    List<DtoCarro> carros = [];
+    carros.add(jetta);
+    carros.add(golf);
+    return carros;
+  }
+
+  List<DtoCliente> bucarClientes() {
+    DtoCliente duda = DtoCliente(nome: 'Duda', cnh: '12345678');
+    duda.id = 1;
+    DtoCliente gabriel = DtoCliente(nome: 'Gabriel', cnh: '63651821741');
+    gabriel.id = 2;
+    List<DtoCliente> clientes = [];
+    clientes.add(duda);
+    clientes.add(gabriel);
+    return clientes;
+  }
 }

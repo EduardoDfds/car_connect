@@ -8,5 +8,9 @@ class DtoLocacao {
   late DtoCarro dadosCarro;
   late DtoCliente dadosCliente;
 
-  DtoLocacao({required this.dadosCarro, required this.dadosCliente, required this.dataFim, required this.dataInicio});
+  DtoLocacao(
+      {required this.dadosCarro,
+      required this.dadosCliente,
+      required this.dataFim,
+      required this.dataInicio});
 }
